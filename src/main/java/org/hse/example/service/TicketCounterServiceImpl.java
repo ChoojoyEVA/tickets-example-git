@@ -17,6 +17,7 @@ public class TicketCounterServiceImpl implements TicketService {
 
     /**
      * @param digitsQnty количество цифр в билете
+     *                   И тут что-нибудь накалякаю
      */
     public TicketCounterServiceImpl(int digitsQnty) {
         if (digitsQnty <= 0 || digitsQnty % 2 != 0) {
