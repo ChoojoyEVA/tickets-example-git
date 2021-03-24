@@ -1,9 +1,7 @@
 package org.hse.example.service;
 
+import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 /**
@@ -15,7 +13,6 @@ public class NearestTickets implements TicketService {
     private boolean done = false;
     private int ticket = 0;
     private int distance;
-    private Optional<Predicate<Integer>> optionalCondition = Optional.empty();
 
     /**
      * @param digitsQnty количество цифр в билете
@@ -30,15 +27,6 @@ public class NearestTickets implements TicketService {
     }
 
     /**
-     * @param digitsQnty количество цифр в билете
-     * @param condition  дополнительное условие
-     */
-    public NearestTickets(int digitsQnty, Predicate<Integer> condition) {
-        this(digitsQnty);
-        this.optionalCondition = Optional.ofNullable(condition);
-    }
-
-    /**
      * Выполняет необходимые вычисления
      *
      * @return экземпляр {@link TicketService}
@@ -49,30 +37,32 @@ public class NearestTickets implements TicketService {
             throw new IllegalStateException("Уже выполнено!");
         }
 
+        //todo реализовать средствами Java 8 (с помощью Stream API)
         IntStream
                 .rangeClosed(1, maxNumber)
-                .filter(number ->
-                        this.optionalCondition
-                            .map(value -> value.test(number))
-                            .orElse(true))
                 .filter(this::isLucky)
-                .forEach(this::processNumber);
+                .forEach(currentTicket -> {
+                    int currentDistance = currentTicket - ticket;
+                    if(currentDistance >= distance) {
+                        return;
+                    }
 
+                    distance = currentDistance;
+                    ticket = currentTicket;
+                });
+        /*for(int currentTicket = 1; currentTicket <= this.maxNumber; currentTicket++){
+            if(!isLucky(currentTicket)){
+                continue;
+            }
+
+            int currentDistance = currentTicket - ticket;
+            if(currentDistance < distance) {
+                distance = currentDistance;
+                ticket = currentTicket;
+            }
+        }*/
         done = true;
         return this;
-    }
-
-    /**
-     * Обрабатывает очередной номер
-     *
-     * @param number номер
-     */
-    private void processNumber(int number) {
-        int currentDistance = number - ticket;
-        if (currentDistance < distance) {
-            distance = currentDistance;
-            ticket = number;
-        }
     }
 
     /**
@@ -85,14 +75,15 @@ public class NearestTickets implements TicketService {
             this.digits[i] = nextNumber % 10;
         }
 
-        int firstSum =
-                Arrays
-                    .stream(this.digits, 0, this.digits.length / 2)
-                    .sum();
-        int lastSum =
-                Arrays
-                    .stream(this.digits, this.digits.length / 2, this.digits.length)
-                    .sum();
+        int firstSum = 0, lastSum = 0;
+        for (int i = 0; i < this.digits.length; i++) {
+            if (i < this.digits.length / 2) {
+                firstSum += this.digits[i];
+                continue;
+            }
+
+            lastSum += this.digits[i];
+        }
 
         return lastSum == firstSum;
     }
