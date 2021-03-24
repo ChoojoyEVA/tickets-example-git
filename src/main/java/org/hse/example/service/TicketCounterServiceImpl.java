@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 
 /**
  * Сервис для подсчёта счастливых билетов
+ * Напишу тут ещё что-то
  */
 public class TicketCounterServiceImpl implements TicketService {
     private final Map<Integer, List<Integer>> summs = new HashMap<>();
