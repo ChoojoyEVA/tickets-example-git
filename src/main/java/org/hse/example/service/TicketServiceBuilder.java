@@ -1,18 +1,21 @@
 package org.hse.example.service;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 /**
  * Интерфейс-строитель экземпляров {@link TicketService}
  */
 public interface TicketServiceBuilder {
     /**
-     * @return количество цифр в билете
+     * @return построитель
      */
-    Integer produceDigitsQty();
+    Supplier<TicketService> supplier();
 
     /**
      * @return экземпляр {@link TicketCounterServiceImpl}
      */
     default TicketService build() {
-        return new TicketCounterServiceImpl(produceDigitsQty());
+        return supplier().get();
     }
 }
