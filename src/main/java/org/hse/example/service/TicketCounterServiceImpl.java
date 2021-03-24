@@ -28,11 +28,13 @@ public class TicketCounterServiceImpl implements TicketService {
     }
 
     /**
+     * Тут я тоже могу написать комментарий
+     *
      * @return экземпляр {@link TicketCounterServiceImpl} в данном случае this
      */
     @Override
     public TicketService doWork() {
-        if(done){
+        if (done) {
             throw new IllegalStateException("Уже выполнено!");
         }
         //todo реализовать средствами Java 8 (с помощью Stream API)
