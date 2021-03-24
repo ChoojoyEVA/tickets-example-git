@@ -21,7 +21,7 @@ public class TicketsExample {
     private static Integer i;
 
     /**
-     * Точка входа
+     * Точка входа в программу
      *
      * @param args строка аргументов. В настоящее время не используется
      */
